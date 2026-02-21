@@ -26,4 +26,4 @@ vyroba solar v teto 15 minute minuly tyden
 
 cesky a nemecky load (i tyden zpet)
 
-modle zdroju generation v teto 15 minute minuly tyden v cesku i nemecku
+podle zdroju generation v teto 15 minute minuly tyden v cesku i nemecku
