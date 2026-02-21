@@ -3,27 +3,28 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 base load predikce (prumerna cena elektriny v tento den)
 peak load predikce (prumerna cena elektriny v tento den mezi 8-20 hod.)
 off load predikce (prumerna cena elektriny v tento den mezi zbyvajicich 12 hod.)
-(... toto vsechno pro stejny den v minulem tydnu)
+(... toto vsechno pro stejny den v minulem tydnu): last_week_price_loads.csv
 
-wind base load predikce (prumerna vyroba vetru v tento den)
-wind peak load predikce (prumerna vyroba vetru v tento den mezi 8-20 hod.)
-wind off load predikce (prumerna vyroba vetru v tento den mezi zbyvajicich 12 hod.)
-(... toto vsechno pro stejny den v minulem tydnu)
+wind base load predikce (prumerna vyroba vetru v tento den): wind_solar_production_loads_day-ahead_prediction.csv
+wind peak load predikce (prumerna vyroba vetru v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+wind off load predikce (prumerna vyroba vetru v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+(... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_day-ahead_prediction.csv
 
-solar base load (prumerna vyroba solar v tento den)
-solar peak load predikce (prumerna vyroba solar v tento den mezi 8-20 hod.)
-solar off load predikce (prumerna vyroba solar v tento den mezi zbyvajicich 12 hod.)
-(... toto vsechno pro stejny den v minulem tydnu)
+solar base load (prumerna vyroba solar v tento den): wind_solar_production_loads_day-ahead_prediction.csv
+solar peak load predikce (prumerna vyroba solar v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+solar off load predikce (prumerna vyroba solar v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+(... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
 
 
 cena plynu na tento den
 cena emisni povolenky na tento den
 (... toto vsechno pro stejny den v minulem tydnu)
 
-cena elektriny v teto 15 minute minuly tyden
-vyroba vetru v teto 15 minute minuly tyden
+cena elektriny v teto 15 minute minuly tyden: ote_prices_15min.csv
+yroba vetru v teto 15 minute minuly tyden
 vyroba solar v teto 15 minute minuly tyden
 
-cesky a nemecky load (i tyden zpet)
+cesky a nemecky load predikce
+cesky a nemecky load tyden zpet
 
 podle zdroju generation v teto 15 minute minuly tyden v cesku i nemecku
