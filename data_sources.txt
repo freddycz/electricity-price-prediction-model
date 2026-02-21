@@ -1,0 +1,1 @@
+Actual_generation_202212250000_202512250000_Hour.csv: used to calculate wind and solar last week loads (https://www.smard.de/en/downloadcenter/download-market-data/)
