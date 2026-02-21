@@ -1,1 +1,2 @@
 Actual_generation_202212250000_202512250000_Hour.csv: used to calculate wind and solar last week loads (https://www.smard.de/en/downloadcenter/download-market-data/)
+Forecasted_generation_Day-Ahead_202301010000_202601010000_Hour.csv: used to calculate wind and solar loads day-ahead prediction (https://www.smard.de/en/downloadcenter/download-market-data/)
