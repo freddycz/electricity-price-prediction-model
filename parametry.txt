@@ -3,29 +3,29 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 base load predikce (prumerna cena elektriny v tento den)
 peak load predikce (prumerna cena elektriny v tento den mezi 8-20 hod.)
 off load predikce (prumerna cena elektriny v tento den mezi zbyvajicich 12 hod.)
-(... toto vsechno pro stejny den v minulem tydnu): elecricity_price_loads.csv
+# (... toto vsechno pro stejny den v minulem tydnu): elecricity_price_loads.csv
 
-wind base load predikce (prumerna vyroba vetru v tento den): wind_solar_production_loads_day-ahead_prediction.csv
-wind peak load predikce (prumerna vyroba vetru v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
-wind off load predikce (prumerna vyroba vetru v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
-(... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
+# wind base load predikce (prumerna vyroba vetru v tento den): wind_solar_production_loads_day-ahead_prediction.csv
+# wind peak load predikce (prumerna vyroba vetru v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+# wind off load predikce (prumerna vyroba vetru v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+# (... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
 
-solar base load (prumerna vyroba solar v tento den): wind_solar_production_loads_day-ahead_prediction.csv
-solar peak load predikce (prumerna vyroba solar v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
-solar off load predikce (prumerna vyroba solar v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
-(... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
+# solar base load (prumerna vyroba solar v tento den): wind_solar_production_loads_day-ahead_prediction.csv
+# solar peak load predikce (prumerna vyroba solar v tento den mezi 8-20 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+# solar off load predikce (prumerna vyroba solar v tento den mezi zbyvajicich 12 hod.): wind_solar_production_loads_day-ahead_prediction.csv
+# (... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
 
 
 cena plynu na tento den
 cena emisni povolenky na tento den
 (... toto vsechno pro stejny den v minulem tydnu)
 
-cena elektriny v teto 15 minute minuly tyden: ote_prices_15min.csv
-vyroba vetru v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
-vyroba solar v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
+# cena elektriny v teto 15 minute minuly tyden: ote_prices_15min.csv
+# vyroba vetru v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
+# vyroba solar v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
 
-nemecky load predikce: germany_load_day-ahead_prediction_15min.csv
-nemecky load tyden zpet: germany_load_last_week_15min.csv
+# nemecky load predikce: germany_load_day-ahead_prediction_15min.csv
+# nemecky load tyden zpet: germany_load_last_week_15min.csv
 
 cesky load predikce
 cesky load tyden zpet
