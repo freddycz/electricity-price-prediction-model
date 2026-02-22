@@ -24,7 +24,10 @@ cena elektriny v teto 15 minute minuly tyden: ote_prices_15min.csv
 vyroba vetru v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
 vyroba solar v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
 
-cesky a nemecky load predikce
-cesky a nemecky load tyden zpet
+nemecky load predikce: germany_load_day-ahead_prediction_15min.csv
+nemecky load tyden zpet: germany_load_last_week_15min.csv
+
+cesky load predikce
+cesky load tyden zpet
 
 podle zdroju generation v teto 15 minute minuly tyden v cesku i nemecku

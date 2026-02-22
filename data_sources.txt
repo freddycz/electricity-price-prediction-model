@@ -1,3 +1,6 @@
 Actual_generation_202212250000_202512250000_Hour.csv: used to calculate wind and solar last week loads (https://www.smard.de/en/downloadcenter/download-market-data/)
 Forecasted_generation_Day-Ahead_202301010000_202601010000_Hour.csv: used to calculate wind and solar loads day-ahead prediction (https://www.smard.de/en/downloadcenter/download-market-data/)
 https://www.ote-cr.cz/cs/statistika/rocni-zprava?date=2025-01-01: used to calculate price loads and as actuall labels (ote_prices_15min)
+Actual_generation_202212250000_202512250000_Quarterhour.csv: used to get wind and solar generation last week for every 15min (https://www.smard.de/en/downloadcenter/download-market-data/)
+Actual_consumption_202212250000_202512250000_Quarterhour.csv: used to get load in Germany last week for every 15min (https://www.smard.de/en/downloadcenter/download-market-data/)
+Forecasted_consumption_202212250000_202512250000_Quarterhour.csv: used to get load day-ahead prediction in Germany for every 15min (https://www.smard.de/en/downloadcenter/download-market-data/)
