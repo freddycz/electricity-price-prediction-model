@@ -16,9 +16,9 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 # (... toto vsechno pro stejny den v minulem tydnu): wind_solar_production_loads_last_week.csv
 
 
-cena plynu na tento den
+# cena plynu na tento den: ote_gas_prices.csv
 cena emisni povolenky na tento den
-(... toto vsechno pro stejny den v minulem tydnu)
+(... toto vsechno pro stejny den v minulem tydnu): ote_gas_prices.csv
 
 # cena elektriny v teto 15 minute minuly tyden: ote_prices_15min.csv
 # vyroba vetru v teto 15 minute minuly tyden: wind_solar_production_last_week_15min.csv
