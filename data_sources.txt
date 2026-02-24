@@ -6,3 +6,4 @@ Actual_consumption_202212250000_202512250000_Quarterhour.csv: used to get load i
 Forecasted_consumption_202212250000_202512250000_Quarterhour.csv: used to get load day-ahead prediction in Germany for every 15min (https://www.smard.de/en/downloadcenter/download-market-data/)
 https://www.ote-cr.cz/cs/statistika/rocni-zprava?date=2025-01-01: used to to get gas prices (ote_gas_prices.csv)
 EUA.csv: used to get eua prices (eua_prices_complete.csv)
+https://documenter.getpostman.com/view/7009892/2s93JtP3F6#b223e451-65c9-4e24-a782-2af31b431742: used to get load in Czechia last week for every 15min

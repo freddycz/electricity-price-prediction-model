@@ -28,6 +28,6 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 # nemecky load tyden zpet: germany_load_last_week_15min.csv
 
 cesky load predikce
-cesky load tyden zpet
+# cesky load tyden zpet: czechia_load_last_week_15min.csv
 
 podle zdroju generation v teto 15 minute minuly tyden v cesku i nemecku
