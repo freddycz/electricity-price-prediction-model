@@ -8,3 +8,5 @@ https://www.ote-cr.cz/cs/statistika/rocni-zprava?date=2025-01-01: used to to get
 EUA.csv: used to get eua prices (eua_prices_complete.csv)
 https://documenter.getpostman.com/view/7009892/2s93JtP3F6#b223e451-65c9-4e24-a782-2af31b431742: used to get load in Czechia last week for every 15min
 https://documenter.getpostman.com/view/7009892/2s93JtP3F6#10c431a9-69a9-4a76-8674-923c2eff48ed: used to get load prediction in Czechia every 15min
+Actual_generation_202212250000_202512250000_Quarterhour.csv: used to get other generation sources in Germany (https://www.smard.de/en/downloadcenter/download-market-data/)
+https://documenter.getpostman.com/view/7009892/2s93JtP3F6#d4383852-1e53-4f98-a028-e0d9ac73d5f5: used to get other generation sources in Czechia 
