@@ -1,4 +1,4 @@
-Date;Solar Baseload [MWh];Solar Peakload [MWh];Solar Off-peak [MWh];Wind Baseload [MWh];Wind Peakload [MWh];Wind Off-peak [MWh]
+date;solar_baseload_last_week;solar_peakload_last_week;solar_offpeak_last_week;wind_baseload_last_week;wind_peakload_last_week;wind_offpeak_last_week
 2022-12-25;1525.04;3045.38;4.71;15741.57;15930.08;15553.06
 2022-12-26;637.9;1271.52;4.27;30038.23;33278.69;26797.77
 2022-12-27;2055.16;4106.08;4.23;29593.47;28728.52;30458.42
