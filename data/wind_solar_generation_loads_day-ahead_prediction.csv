@@ -1,4 +1,4 @@
-Date;Solar Baseload [MWh];Solar Peakload [MWh];Solar Off-peak [MWh];Wind Baseload [MWh];Wind Peakload [MWh];Wind Off-peak [MWh]
+date;solar_baseload;solar_peakload;solar_offpeak;wind_baseload;wind_peakload;wind_offpeak
 2023-01-01;2178.32;4356.65;0.0;29955.36;27228.75;32681.98
 2023-01-02;1768.68;3537.35;0.0;25582.06;27340.98;23823.15
 2023-01-03;1670.72;3341.44;0.0;17238.11;14327.98;20148.25
