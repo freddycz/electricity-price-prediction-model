@@ -6,3 +6,4 @@ notebook~=7.5.3
 requests~=2.32.5
 python-dotenv~=1.2.1
 matplotlib~=3.10.8
+Flask~=3.1.3
