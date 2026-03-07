@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predikce ceny elektřiny</title>
+    <title>DT &ndash; predikce cen</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Chart Web Component -->
@@ -15,22 +16,73 @@
             height: 100%;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+        integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous">
+        </script>
+    <script>
+        document.addEventListener('htmx:afterSwap', function (evt) {
+            const chart = document.querySelector('google-chart');
+            if (chart && typeof chart.redraw === 'function') {
+                setTimeout(() => chart.redraw(), 50);
+            }
+            bindChartEvent();
+        });
+
+        function bindChartEvent() {
+            const chart = document.querySelector('google-chart');
+            if (chart && !chart.hasAttribute('data-bound')) {
+                chart.setAttribute('data-bound', 'true');
+                chart.addEventListener('google-chart-select', function (e) {
+                    const selection = chart.selection;
+                    if (selection && selection.length > 0) {
+                        const rowIndex = selection[0].row;
+                        if (rowIndex !== null) {
+                            // Extract period integer index (1-96), where 1 = 00:00 time
+                            const periodIndex = rowIndex + 1; // rowIndex is 0-based index of data row, excluding header
+
+                            // Get current date from URL or input
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const datePicker = document.querySelector('input[name="date"]');
+                            const dateVal = urlParams.get('date') || (datePicker ? datePicker.value : '');
+
+                            if (periodIndex && dateVal) {
+                                // Trigger HTMX request
+                                htmx.ajax('GET', `/?date=${dateVal}&period=${periodIndex}`, '#metrics-container');
+                                window.history.pushState({}, '', `/?date=${dateVal}&period=${periodIndex}`);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Bind initially
+        document.addEventListener('DOMContentLoaded', bindChartEvent);
+    </script>
 </head>
-<body class="bg-gray-50 h-screen w-screen overflow-hidden flex flex-col text-gray-800 font-sans">
-    
-    <!-- Hlavička / Nadpis -->
+
+<body class="bg-gray-50 h-screen w-screen overflow-hidden flex flex-col text-gray-800 font-sans" hx-boost="true">
     <header class="flex flex-row items-center px-8 py-2 justify-between shrink-0">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">DT &ndash; predikce cen elektřiny (15min)</h1>
+        <a href="/">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">DT &ndash; predikce cen elektřiny (15min)</h1>
+        </a>
+        <!-- Date Picker (s šipkami) -->
         {% include 'date_picker.html' %}
     </header>
 
-    <!-- Date Picker (s šipkami) -->
 
     <!-- Bar Chart (Zabírá přibližně polovinu stránky) -->
     {% include 'chart.html' %}
 
-    <!-- Metriky -->
-    {% include 'metrics.html' %}
+    <!-- Metriky / Period Stats -->
+    <div class="flex h-48 items-center">
+        {% if show_period %}
+        {% include 'period_stats.html' %}
+        {% else %}
+        {% include 'metrics.html' %}
+        {% endif %}
+    </div>
 
 </body>
+
 </html>
