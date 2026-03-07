@@ -1,0 +1,50 @@
+<!-- period_stats.html -->
+<div class="flex-1 px-4 py-4 pb-6" id="metrics-container">
+    <div class="max-w-7xl mx-auto flex flex-col items-center">
+
+        <div class="w-full flex justify-between items-center mb-4 px-2">
+            <h2 class="text-xl font-bold text-gray-800">Detail pro <span class="text-blue-600">{{ data.period_stats.time
+                    }}</span></h2>
+
+            <a href="/?date={{ data.date }}" hx-get="/?date={{ data.date }}" hx-target="body" hx-push-url="true"
+                class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Zpět na denní přehled
+            </a>
+        </div>
+
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Predikovaná cena -->
+            <div
+                class="bg-blue-50 rounded-xl p-4 shadow-sm border border-blue-100 flex flex-col items-center justify-center text-center">
+                <h3 class="text-xs sm:text-sm font-semibold text-blue-700 uppercase tracking-wide mb-1">Predikovaná cena
+                </h3>
+                <div class="text-2xl sm:text-3xl font-bold text-blue-900">{{ data.period_stats.predicted }} <span
+                        class="text-sm font-normal text-blue-600">EUR/MWh</span></div>
+            </div>
+
+            <!-- Skutečná cena -->
+            <div
+                class="bg-emerald-50 rounded-xl p-4 shadow-sm border border-emerald-100 flex flex-col items-center justify-center text-center">
+                <h3 class="text-xs sm:text-sm font-semibold text-emerald-700 uppercase tracking-wide mb-1">Skutečná cena
+                </h3>
+                <div class="text-2xl sm:text-3xl font-bold text-emerald-900">{{ data.period_stats.actual }} <span
+                        class="text-sm font-normal text-emerald-600">EUR/MWh</span></div>
+            </div>
+
+            <!-- Odchylka -->
+            <div
+                class="bg-white rounded-xl p-4 shadow-sm border border-gray-200 flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
+                <h3 class="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Odchylka</h3>
+                <div
+                    class="text-2xl sm:text-3xl font-bold {% if '-' in data.period_stats.error %}text-red-500{% else %}text-emerald-500{% endif %}">
+                    {{ data.period_stats.error }} <span class="text-sm font-normal text-gray-400">EUR/MWh</span></div>
+            </div>
+        </div>
+
+    </div>
+</div>
