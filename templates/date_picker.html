@@ -1,19 +1,19 @@
 <!-- date_picker.html -->
 <div class="flex items-center justify-center py-2 shrink-0">
-    <button class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-200 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Předchozí den">
+    <a href="/?date={{ prev_date }}" class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-200 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Předchozí den">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-    </button>
+    </a>
     
     <div class="mx-4">
         <!-- Zde je samotný date picker (uprostřed) -->
-        <input type="date" class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white font-medium text-gray-700 cursor-pointer text-lg text-center" value="2026-03-07">
+        <input type="date" name="date" class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white font-medium text-gray-700 cursor-pointer text-lg text-center" value="{{ data.date }}" onchange="window.location.href='/?date=' + this.value;">
     </div>
 
-    <button class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-200 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Následující den">
+    <a href="/?date={{ next_date }}" class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-200 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Následující den">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
-    </button>
+    </a>
 </div>
