@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predikce ceny elektřiny</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Chart Web Component -->
+    <script type="module" src="https://esm.sh/@google-web-components/google-chart"></script>
+    <style>
+        /* Pro správné zobrazení google-chart komponenty */
+        google-chart {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen w-screen overflow-hidden flex flex-col text-gray-800 font-sans">
+    
+    <!-- Hlavička / Nadpis -->
+    <header class="flex flex-row items-center px-8 py-2 justify-between shrink-0">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">DT &ndash; predikce cen elektřiny (15min)</h1>
+        {% include 'date_picker.html' %}
+    </header>
+
+    <!-- Date Picker (s šipkami) -->
+
+    <!-- Bar Chart (Zabírá přibližně polovinu stránky) -->
+    {% include 'chart.html' %}
+
+    <!-- Metriky -->
+    {% include 'metrics.html' %}
+
+</body>
+</html>
