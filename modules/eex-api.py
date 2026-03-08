@@ -1,5 +1,7 @@
-import requests
 from datetime import datetime, timedelta
+
+import requests
+
 
 class EexFetcher: 
     def __init__(self, date: str):
@@ -24,7 +26,7 @@ class EexFetcher:
         }
 
 
-    def avg_price(self):
+    def get_price_loads(self):
         url = 'https://api.eex-group.com/pub/market-data/price-ticker'
 
         day = self.date.strftime('%d')
@@ -46,18 +48,18 @@ class EexFetcher:
             response.raise_for_status()
             
             body = response.json()
-            result["price_baseload"] = body["data"][0][1]
+            result["baseload"] = body["data"][0][1]
 
             params["product"] = "Peak"
             params["shortCode"] = f"PX{day}"
-            response = requests.get(url, params=params, headers=headers)
+            response = requests.get(url, params=params, headers=self.headers)
             
             response.raise_for_status()
             
             body = response.json()
-            result["price_peakload"] = body["data"][0][1]
+            result["peakload"] = body["data"][0][1]
 
-            result["price_offpeak"] = 2 * result["price_baseload"] - result["price_peakload"]
+            result["offpeak"] = 2 * result["baseload"] - result["peakload"]
 
             return result
         except requests.exceptions.HTTPError as err:
@@ -65,7 +67,7 @@ class EexFetcher:
         except Exception as err:
             raise Exception(f"An error occurred: {err}")
 
-    def eua_prices(self):
+    def get_eua_prices(self):
         url = 'https://api.eex-group.com/pub/market-data/price-ticker'
         url_lw = 'https://api.eex-group.com/pub/market-data/table-data'
 
@@ -110,16 +112,21 @@ class EexFetcher:
             response.raise_for_status()
             
             body = response.json()
-            result["eu_price"] = body["data"][0][1]
+            result["price"] = body["data"][0][1]
 
             response = requests.get(url_lw, params=params_lw, headers=self.headers)
             response.raise_for_status()
             
             body = response.json()
-            result["lw_eu_price"] = body["data"][0][-1]
+            result["lw_price"] = body["data"][0][-1]
 
             return result
         except requests.exceptions.HTTPError as err:
             raise Exception(f"HTTP error occurred: {err}")
         except Exception as err:
             raise Exception(f"An error occurred: {err}")
+
+f = EexFetcher("2026-03-08")
+
+print(f.get_price_loads())
+print(f.get_eua_prices())
