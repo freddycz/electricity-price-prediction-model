@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from datetime import datetime, timedelta
-from database import get_data_for_date
+from modules.database import get_data_for_date
 
 app = Flask(__name__)
 
