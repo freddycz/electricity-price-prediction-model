@@ -43,7 +43,7 @@ sin_time
 cos_time
 
 
-EEX 
+EEX (eex_api.py)
 	price_baseload
 	price_offpeak
 	price_peakload
