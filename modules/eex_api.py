@@ -125,8 +125,3 @@ class EexFetcher:
             raise Exception(f"HTTP error occurred: {err}")
         except Exception as err:
             raise Exception(f"An error occurred: {err}")
-
-f = EexFetcher("2026-03-08")
-
-print(f.get_price_loads())
-print(f.get_eua_prices())
