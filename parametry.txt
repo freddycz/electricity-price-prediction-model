@@ -35,19 +35,22 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 	germany_other_sources_generation_last_week_15min.csv
 
 
-pole, ktere zbyla jako uzitecna:
+pole, ktere se pouzivaji:
+
 period
 is_peak
 sin_time
 cos_time
-eua_price (musim zjistit zdroj)
-lw_eua_price (musim zjistit zdroj)
 
 
 EEX 
 	price_baseload
 	price_offpeak
 	price_peakload
+
+	eua_price
+	lw_eua_price
+
 
 OTE
 	lw_price (cena na tuto 15min)
