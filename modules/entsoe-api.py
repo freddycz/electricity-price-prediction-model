@@ -123,7 +123,7 @@ class EntsoeApi:
             print(f"failed to fetch czechia hydro: {e}")
             return None
 
-    def get_germany_hydro_lw(self):
+    def get_germany_production_lw(self):
         params = {
             "documentType": "A75",
             "processType": "A16",
@@ -135,14 +135,41 @@ class EntsoeApi:
         target_types = {
             "B02": "temp", #coal to make sure we have correct number of rows
             "B10": "germany_hydro_active_gen_last_week",
+            "B16": "lw_germany_solar_gen",
+            "B18": "germany_wind_offshore_gen_last_week",
+            "B19": "germany_wind_onshore_gen_last_week",
         }
         try:
             response = requests.get(self.url, params=params, headers=self.headers)
             data = self._parse_hydro_production_data(response.text, target_types)
-            data = data.drop(columns=['temp'])
+
+            data["lw_germany_wind_gen"] = data["germany_wind_offshore_gen_last_week"] + data["germany_wind_onshore_gen_last_week"]
+
+            data["lw_solar_baseload"] = data["lw_germany_solar_gen"].mean()
+            data["lw_wind_baseload"] = data["lw_germany_wind_gen"].mean()
+
+            periods = len(data)
+            #peak load periods
+            p_start = 32 
+            p_end = 80
+
+            if periods == 92:
+                p_start -= 4
+                p_end -= 4
+            elif periods == 100:
+                p_start += 4
+                p_end += 4
+
+            peak_df = data.iloc[p_start:p_end]
+            data["lw_wind_peakload"] = peak_df["lw_germany_wind_gen"].mean()
+            
+            offpeak_df = data.drop(peak_df.index)
+            data["lw_wind_offpeak"] = offpeak_df["lw_germany_wind_gen"].mean()
+
+            data = data.drop(columns=['temp', 'germany_wind_offshore_gen_last_week', 'germany_wind_onshore_gen_last_week'])
             return data
         except Exception as e:
-            print(f"failed to fetch germany hydro: {e}")
+            print(f"failed to fetch germany production lw: {e}")
             return None
 
 
@@ -155,4 +182,4 @@ api_key = os.getenv("ENTSOE_API_KEY")
 
 e = EntsoeApi(api_key=api_key)
 print(e.get_czechia_hydro_lw())
-print(e.get_germany_hydro_lw())
+print(e.get_germany_production_lw())
