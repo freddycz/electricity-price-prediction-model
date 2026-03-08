@@ -1,0 +1,65 @@
+import requests
+from datetime import datetime
+
+class EexFetcher: 
+    def __init__(self, date: str):
+        if isinstance(date, str):
+            self.date = datetime.strptime(date, '%Y-%m-%d').date()
+        else:
+            self.date = date
+
+    def avg_price(self):
+        url = 'https://api.eex-group.com/pub/market-data/price-ticker'
+
+        day = self.date.strftime('%d')
+        maturity_val = self.date.strftime('%Y%m')
+
+        params = {
+            'shortCode': f'FX{day}',
+            'area': 'CZ',
+            'product': 'Base',
+            'commodity': 'POWER',
+            'pricing': 'F',
+            'maturity': maturity_val
+        }
+        
+        headers = {
+            'accept': 'application/json, text/javascript, */*; q=0.01',
+            'accept-language': 'cs-CZ,cs;q=0.9,en;q=0.8',
+            'origin': 'https://www.eex.com',
+            'priority': 'u=1, i',
+            'referer': 'https://www.eex.com/',
+            'sec-ch-ua': '"Not:A-Brand";v="99", "Google Chrome";v="145", "Chromium";v="145"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Linux"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'cross-site',
+            'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'
+        }
+        
+        try:
+            result = {}
+            response = requests.get(url, params=params, headers=headers)
+            
+            response.raise_for_status()
+            
+            body = response.json()
+            result["price_baseload"] = body["data"][0][1]
+
+            params["product"] = "Peak"
+            params["shortCode"] = f"PX{day}"
+            response = requests.get(url, params=params, headers=headers)
+            
+            response.raise_for_status()
+            
+            body = response.json()
+            result["price_peakload"] = body["data"][0][1]
+
+            result["price_offpeak"] = 2 * result["price_baseload"] - result["price_peakload"]
+
+            return result
+        except requests.exceptions.HTTPError as err:
+            raise Exception(f"HTTP error occurred: {err}")
+        except Exception as err:
+            raise Exception(f"An error occurred: {err}")
