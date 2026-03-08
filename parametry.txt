@@ -60,7 +60,7 @@ OTE
 	gas_price
 	lw_gas_price
 
-spotrenewables
+spotrenewables (spotrenewables_fetcher.py)
 	solar_projection (df["lw_germany_solar_gen"] * (df["solar_baseload"] / df["lw_solar_baseload"]))
 		solar_baseload
 	wind_baseload
