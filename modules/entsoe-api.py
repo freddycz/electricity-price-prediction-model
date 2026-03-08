@@ -1,6 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -9,11 +9,29 @@ from dotenv import load_dotenv
 
 
 class EntsoeApi:
-    def __init__(self, api_key):
+    def __init__(self, api_key, date_input):
         self.url = 'https://web-api.tp.entsoe.eu/api' 
         self.headers = {
             "SECURITY_TOKEN": api_key
         }
+
+        if isinstance(date_input, datetime):
+            self.target_date = date_input.date()
+        else:
+            self.target_date = datetime.strptime(date_input, '%Y-%m-%d').date()
+            
+        self.period_start = self._convert_local_midnight_to_utc(self.target_date)
+        self.period_end = self._convert_local_midnight_to_utc(self.target_date + timedelta(days=1))
+        
+        lw_date = self.target_date - timedelta(days=7)
+        self.period_start_lw = self._convert_local_midnight_to_utc(lw_date)
+        self.period_end_lw = self._convert_local_midnight_to_utc(lw_date + timedelta(days=1))
+
+    def _convert_local_midnight_to_utc(self, pure_date):
+        prague_tz = ZoneInfo("Europe/Prague")
+        local_midnight = datetime.combine(pure_date, time.min, tzinfo=prague_tz)
+        utc_dt = local_midnight.astimezone(ZoneInfo("UTC"))
+        return utc_dt.strftime("%Y%m%d%H%M")
 
     def _parse_hydro_production_data(self, xml_string, target_types):
         root = ET.fromstring(xml_string)
@@ -89,7 +107,7 @@ class EntsoeApi:
         df = df.set_index("pos").sort_index()
 
         max_pos = df.index.max()
-        full_range = range(max_pos)
+        full_range = range(1, max_pos + 1)
 
         df_filled = df.reindex(full_range).ffill()
 
@@ -102,8 +120,8 @@ class EntsoeApi:
             "documentType": "A75",
             "processType": "A16",
             "in_Domain": "10YCZ-CEPS-----N",
-            "periodStart": "202308152200",
-            "periodEnd": "202308162200"
+            "periodStart": self.period_start_lw,
+            "periodEnd": self.period_end_lw
         }
 
         target_types = {
@@ -128,8 +146,8 @@ class EntsoeApi:
             "documentType": "A75",
             "processType": "A16",
             "in_Domain": "10Y1001A1001A83F",
-            "periodStart": "202308152200",
-            "periodEnd": "202308162200",
+            "periodStart": self.period_start_lw,
+            "periodEnd": self.period_end_lw,
         }
 
         target_types = {
@@ -174,12 +192,70 @@ class EntsoeApi:
 
 
 
+    def get_germany_load(self):
+        params_lw = {
+            "documentType": "A65",
+            "processType": "A16",
+            "outBiddingZone_Domain": "10Y1001A1001A83F",
+            "periodStart": self.period_start_lw,
+            "periodEnd": self.period_end_lw
+        }
 
-        
+        params_pred = {
+            "documentType": "A65",
+            "processType": "A01",
+            "outBiddingZone_Domain": "10Y1001A1001A83F",
+            "periodStart": self.period_start,
+            "periodEnd": self.period_end
+        }
 
-load_dotenv()
-api_key = os.getenv("ENTSOE_API_KEY")
+        try:
+            res_lw = requests.get(self.url, params=params_lw, headers=self.headers)
+            df_lw = self._parse_xml_response(res_lw.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
+            df_lw = df_lw.rename(columns={"load": "lw_germany_load"})
+            
+            res_pred = requests.get(self.url, params=params_pred, headers=self.headers)
+            df_pred = self._parse_xml_response(res_pred.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
+            df_pred = df_pred.rename(columns={"load": "germany_load_prediction"})
 
-e = EntsoeApi(api_key=api_key)
-print(e.get_czechia_hydro_lw())
-print(e.get_germany_production_lw())
+            # Merge on 'pos'
+            df = pd.merge(df_lw, df_pred, on="pos", how="outer")
+            return df
+
+        except Exception as e:
+            print(f"failed to fetch germany load: {e}")
+            return None
+
+    def get_czechia_load(self):
+        params_lw = {
+            "documentType": "A65",
+            "processType": "A16",
+            "outBiddingZone_Domain": "10YCZ-CEPS-----N",
+            "periodStart": self.period_start_lw,
+            "periodEnd": self.period_end_lw
+        }
+
+        params_pred = {
+            "documentType": "A65",
+            "processType": "A01",
+            "outBiddingZone_Domain": "10YCZ-CEPS-----N",
+            "periodStart": self.period_start,
+            "periodEnd": self.period_end
+        }
+
+        try:
+            res_lw = requests.get(self.url, params=params_lw, headers=self.headers)
+            df_lw = self._parse_xml_response(res_lw.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
+            df_lw = df_lw.rename(columns={"load": "lw_czechia_load"})
+            
+            res_pred = requests.get(self.url, params=params_pred, headers=self.headers)
+            df_pred = self._parse_xml_response(res_pred.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
+            df_pred = df_pred.rename(columns={"load": "czechia_load_prediction"})
+
+            # Merge on 'pos'
+            df = pd.merge(df_lw, df_pred, on="pos", how="outer")
+            return df
+
+        except Exception as e:
+            print(f"failed to fetch germany load: {e}")
+            return None
