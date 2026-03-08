@@ -34,3 +34,52 @@ Kazda 15 minuta bude obsahovat nasledujici pole:
 	czechia_other_sources_generation_last_week_15min.csv
 	germany_other_sources_generation_last_week_15min.csv
 
+
+pole, ktere zbyla jako uzitecna:
+period
+is_peak
+sin_time
+cos_time
+eua_price (musim zjistit zdroj)
+lw_eua_price (musim zjistit zdroj)
+
+
+EEX 
+	price_baseload
+	price_offpeak
+	price_peakload
+
+OTE
+	lw_price (cena na tuto 15min)
+	lw_price_baseload
+	lw_price_offpeak
+	lw_price_peakload
+	gas_price
+	lw_gas_price
+
+spotrenewables
+	solar_projection (df["lw_germany_solar_gen"] * (df["solar_baseload"] / df["lw_solar_baseload"]))
+		solar_baseload
+	wind_baseload
+	wind_offpeak
+	wind_peakload
+
+Entso-e
+	lw_germany_hydro_active (pump storage)
+	lw_czechia_hydro_active (pump storage)
+	lw_czechia_hydro_reservoir_active
+
+	lw_germany_solar_gen (v teto 15min)
+	lw_germany_wind_gen (v teto 15min)
+
+	germany_load_prediction
+	czechia_load_prediction
+
+	lw_czechia_load
+	lw_germany_load
+
+	lw_wind_baseload
+	lw_wind_offpeak
+	lw_wind_peakload
+
+	lw_solar_baseload
