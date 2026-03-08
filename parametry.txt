@@ -52,7 +52,7 @@ EEX (eex_api.py)
 	lw_eua_price
 
 
-OTE
+OTE (ote_api.py)
 	lw_price (cena na tuto 15min)
 	lw_price_baseload
 	lw_price_offpeak
