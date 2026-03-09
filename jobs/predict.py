@@ -266,7 +266,7 @@ if __name__ == "__main__":
     # Because API fetches mix real-time/day-ahead
     
     # Usually pipelines need to be run for the next day 
-    tomorrow_str = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+    tomorrow_str = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
     print(f"Running prediction pipeline for date: {tomorrow_str}")
     
     create_prediction_pipeline(tomorrow_str)

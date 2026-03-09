@@ -1,12 +1,13 @@
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from modules.database import Database
 from modules.ote_api import OteFetcher
+
 
 def run_actual_prices_fetch(target_date_str=None):
     if target_date_str is None:
@@ -31,6 +32,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         target_date = sys.argv[1]
     else:
-        target_date = datetime.today().strftime('%Y-%m-%d')
+        target_date = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
         
     run_actual_prices_fetch(target_date)
