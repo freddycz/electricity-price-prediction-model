@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from datetime import datetime, timedelta
-from modules.database import get_data_for_date
+from modules.database import Database
 
 app = Flask(__name__)
 
@@ -15,12 +15,16 @@ def dashboard():
         current_date = datetime.today()
         date_str = current_date.strftime('%Y-%m-%d')
         
-    data = get_data_for_date(date_str, period_str)
+    db = Database()
+    data = db.get_data_for_date(date_str)
+    
+    if period_str:
+        data["period_stats"] = db.get_data_for_period(date_str, period_str)
     
     prev_date = (current_date - timedelta(days=1)).strftime('%Y-%m-%d')
     next_date = (current_date + timedelta(days=1)).strftime('%Y-%m-%d')
 
-    if period_str and data["period_stats"]:
+    if period_str and data.get("period_stats"):
         if request.headers.get('HX-Request'):
             return render_template("period_stats.html", data=data)
         else:
