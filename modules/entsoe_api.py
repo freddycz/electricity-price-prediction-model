@@ -41,6 +41,11 @@ class EntsoeApi:
         raw_production_data = {code: [] for code in target_types.keys()}
         global_max_position = 0
         for timeseries in root.findall('gmd:TimeSeries', ns):
+            # We only want generation (power going IN to the bidding zone)
+            in_bz = timeseries.find('gmd:inBiddingZone_Domain.mRID', ns)
+            if in_bz is None:
+                continue
+
             psr_type_elem = timeseries.find('.//gmd:psrType', ns)
             
             if psr_type_elem is not None and psr_type_elem.text in target_types:
