@@ -72,14 +72,28 @@
 
 
     <!-- Bar Chart (Zabírá přibližně polovinu stránky) -->
-    {% include 'chart.html' %}
+    {% if data.has_prediction_data %}
+        {% include 'chart.html' %}
+    {% else %}
+        <div class="flex-1 min-h-0 flex flex-col px-4 py-2 w-full mx-auto">
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 w-full h-full flex items-center justify-center">
+                <div class="text-gray-500 italic text-xl text-center">
+                    Predikce pro tento den zatím nejsou k dispozici.
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <!-- Metriky / Period Stats -->
-    <div class="flex h-48 items-center">
+    <div id="metrics-container" class="flex h-48 items-center justify-center w-full">
         {% if show_period %}
-        {% include 'period_stats.html' %}
+            {% include 'period_stats.html' %}
+        {% elif not data.has_actual_data %}
+            <div class="text-gray-500 italic text-lg text-center w-full">
+                Skutečná data pro tento den zatím nejsou k dispozici.
+            </div>
         {% else %}
-        {% include 'metrics.html' %}
+            {% include 'metrics.html' %}
         {% endif %}
     </div>
 
