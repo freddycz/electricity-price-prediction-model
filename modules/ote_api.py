@@ -37,33 +37,7 @@ class OteFetcher:
             df = pd.DataFrame(points)
             df['y'] = df['y'].astype(float)
 
-            periods = len(df)
-            #peak load periods
-            p_start = 32 
-            p_end = 80
-
-            if periods == 92:
-                p_start -= 4
-                p_end -= 4
-            elif periods == 100:
-                p_start += 4
-                p_end += 4
-
-            baseload = df['y'].mean()
-    
-            peak_df = df.iloc[p_start:p_end]
-            peakload = peak_df['y'].mean()
-    
-            offpeak_df = df.drop(peak_df.index)
-            offpeak = offpeak_df['y'].mean()
-            
-            return {
-                'baseload': float(baseload),
-                'peakload': float(peakload),
-                'offpeak':float(offpeak), 
-                'prices': df['y'].tolist()
-            } 
-            
+            return df['y'].tolist()
         except Exception as e:
             print(f"Failed parsing electricity prices: {e}")
             return None
