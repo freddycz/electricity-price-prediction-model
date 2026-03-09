@@ -117,7 +117,7 @@ class Database:
             "metrics": metrics,
             "period_stats": None,
             "has_actual_data": len(errors) > 0,
-            "has_prediction_data": len(chart_data) > 1
+            "has_prediction_data": len(db_data) > 0
         }
 
     def get_data_for_period(self, date_str, period_idx):
