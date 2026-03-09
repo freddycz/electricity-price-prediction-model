@@ -192,6 +192,46 @@ class EntsoeApi:
 
 
 
+    def _align_historical_to_prediction(self, df_hist, df_pred):
+        if len(df_hist) == len(df_pred):
+            return pd.merge(df_pred, df_hist, on="pos", how="left")
+
+        len_h = len(df_hist)
+        len_p = len(df_pred)
+
+        df_map = df_pred[['pos']].copy()
+        df_map['target_pos'] = df_map['pos']
+
+        if len_p == 92 and len_h == 96:
+            df_map.loc[df_map['pos'] > 8, 'target_pos'] += 4
+
+        elif len_p == 100 and len_h == 96:
+            df_map.loc[df_map['pos'] > 12, 'target_pos'] -= 4
+
+        elif len_p == 96 and len_h == 92:
+            df_map.loc[df_map['pos'] > 12, 'target_pos'] -= 4
+            df_map.loc[df_map['pos'].between(9, 12), 'target_pos'] = -1
+
+        elif len_p == 96 and len_h == 100:
+            df_map.loc[df_map['pos'] > 12, 'target_pos'] += 4
+
+        df_aligned = pd.merge(
+            df_map, 
+            df_hist, 
+            left_on='target_pos', 
+            right_on='pos', 
+            how='left',
+            suffixes=('', '_hist')
+        )
+
+        cols_to_drop = ['target_pos', 'pos_hist']
+        if 'pos_hist' not in df_aligned.columns and 'pos_y' in df_aligned.columns:
+            cols_to_drop = ['target_pos', 'pos_y']
+            
+        df_aligned = df_aligned.drop(columns=cols_to_drop, errors='ignore')
+        
+        return pd.merge(df_aligned, df_pred, on="pos", how="left")
+
     def get_germany_load(self):
         params_lw = {
             "documentType": "A65",
@@ -218,8 +258,8 @@ class EntsoeApi:
             df_pred = self._parse_xml_response(res_pred.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
             df_pred = df_pred.rename(columns={"load": "germany_load_prediction"})
 
-            # Merge on 'pos'
-            df = pd.merge(df_lw, df_pred, on="pos", how="outer")
+            # Merge correctly considering DST
+            df = self._align_historical_to_prediction(df_lw, df_pred)
             return df
 
         except Exception as e:
@@ -252,10 +292,10 @@ class EntsoeApi:
             df_pred = self._parse_xml_response(res_pred.text, "urn:iec62325.351:tc57wg16:451-6:generationloaddocument:3:0")
             df_pred = df_pred.rename(columns={"load": "czechia_load_prediction"})
 
-            # Merge on 'pos'
-            df = pd.merge(df_lw, df_pred, on="pos", how="outer")
+            # Merge correctly considering DST
+            df = self._align_historical_to_prediction(df_lw, df_pred)
             return df
 
         except Exception as e:
-            print(f"failed to fetch germany load: {e}")
+            print(f"failed to fetch czechia load: {e}")
             return None
