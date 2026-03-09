@@ -9,9 +9,9 @@ class SpotRenewables:
         self.target_date = target_date
         self.country = country
         
-        # Date Math: Payload is always Target Date - 1
+        # Date Math: Payload is always Target Date - 2
         self.target_dt = datetime.strptime(target_date, "%Y-%m-%d")
-        self.payload_dt = self.target_dt - timedelta(days=1)
+        self.payload_dt = self.target_dt - timedelta(days=2)
         
         # Formats needed for different endpoints
         self.p_date_str = self.payload_dt.strftime("%Y-%m-%d")
