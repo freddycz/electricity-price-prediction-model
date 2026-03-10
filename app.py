@@ -8,7 +8,6 @@ from worker import start_background_worker
 
 app = Flask(__name__)
 
-# Ošetření proti dvojímu spuštění v debug módu Flasku (reloader)
 if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_RUN_FROM_CLI") is None:
     start_background_worker()
 
