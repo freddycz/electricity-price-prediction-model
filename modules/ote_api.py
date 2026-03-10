@@ -23,13 +23,12 @@ class OteFetcher:
             response.raise_for_status()
             return response.json()
         except Exception as e:
-            print(f"Chyba při stahování ({url}): {e}")
-            return None
+            raise Exception(f"Chyba při stahování ({url}): {e}") from e
 
     def get_electricity_prices(self):
         json_data = self._fetch_json(self.url_ele, date_str=self.date_str)
         if not json_data:
-            return None
+            raise Exception("No JSON data returned for electricity prices")
 
         try:
             points = json_data['data']['dataLine'][1]['point']
@@ -39,8 +38,7 @@ class OteFetcher:
 
             return df['y'].tolist()
         except Exception as e:
-            print(f"Failed parsing electricity prices: {e}")
-            return None
+            raise Exception(f"Failed parsing electricity prices: {e}") from e
 
 
     def get_lw_electricity_prices(self):
@@ -49,7 +47,7 @@ class OteFetcher:
 
         json_data = self._fetch_json(self.url_ele, str_week_ago)
         if not json_data:
-            return None
+            raise Exception("No JSON data returned for lw electricity prices")
 
         try:
             points = json_data['data']['dataLine'][1]['point']
@@ -85,8 +83,7 @@ class OteFetcher:
             } 
             
         except Exception as e:
-            print(f"Failed parsing electricity prices: {e}")
-            return None
+            raise Exception(f"Failed parsing electricity prices: {e}") from e
 
     def _find_gas_price_in_json(self, json_data, target_date_str):
         if not json_data: return None
@@ -116,6 +113,11 @@ class OteFetcher:
         if price_week_ago is None:
             json_history = self._fetch_json(self.url_gas, str_week_ago)
             price_week_ago = self._find_gas_price_in_json(json_history, str_week_ago)
+
+        if price_now is None:
+            raise Exception("Current gas price not found")
+        if price_week_ago is None:
+            raise Exception("Last week's gas price not found")
 
         result = {
             'price': price_now,

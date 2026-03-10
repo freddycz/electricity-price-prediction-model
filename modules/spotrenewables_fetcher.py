@@ -88,7 +88,8 @@ class SpotRenewables:
 
         if response.status_code == 200:
             data = response.json()
-            if not data: return None
+            if not data:
+                raise Exception("SpotRenewables returned empty JSON data")
             
             f = data.get("summary", {}).get("forecast", {})
             target_key = f"{self.target_date} 00:00:00"
@@ -102,7 +103,8 @@ class SpotRenewables:
                 "offpeak": offpeak,
                 "peakload": peakload,
             }
-        return None
+            
+        raise Exception(f"SpotRenewables fetch failed with HTTP {response.status_code}: {response.text}")
 
     def get_solar_forecast(self):
         return self._fetch(solar=True, wind=False)

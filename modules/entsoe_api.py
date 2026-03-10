@@ -143,8 +143,7 @@ class EntsoeApi:
             return data
 
         except Exception as e:
-            print(f"failed to fetch czechia hydro: {e}")
-            return None
+            raise Exception(f"Failed to fetch czechia hydro: {e}") from e
 
     def get_germany_production_lw(self):
         params = {
@@ -192,8 +191,7 @@ class EntsoeApi:
             data = data.drop(columns=['temp', 'germany_wind_offshore_gen_last_week', 'germany_wind_onshore_gen_last_week'])
             return data
         except Exception as e:
-            print(f"failed to fetch germany production lw: {e}")
-            return None
+            raise Exception(f"Failed to fetch germany production lw: {e}") from e
 
 
 
@@ -268,8 +266,7 @@ class EntsoeApi:
             return df
 
         except Exception as e:
-            print(f"failed to fetch germany load: {e}")
-            return None
+            raise Exception(f"Failed to fetch germany load: {e}") from e
 
     def get_czechia_load(self):
         params_lw = {
@@ -302,5 +299,4 @@ class EntsoeApi:
             return df
 
         except Exception as e:
-            print(f"failed to fetch czechia load: {e}")
-            return None
+            raise Exception(f"Failed to fetch czechia load: {e}") from e

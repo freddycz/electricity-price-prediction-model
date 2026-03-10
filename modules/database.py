@@ -17,7 +17,6 @@ class Database:
             with psycopg2.connect(self.conn_str) as conn:
                 with conn.cursor() as cursor:
                     for period_idx, pred in enumerate(predictions_list, start=1):
-                        # Skip NaN predictions
                         if pred is None or (isinstance(pred, float) and pred != pred):
                             continue
                             

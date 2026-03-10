@@ -62,17 +62,13 @@ def align_historical_to_target_pos(df_hist, len_p, hist_pos_col='pos'):
 
     return df_aligned
 
-def create_prediction_pipeline(target_date_str=None):
+def create_prediction_pipeline(target_date_str):
     env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
     load_dotenv(env_path)
     
     api_key = os.getenv("ENTSOE_API_KEY")
     if not api_key:
-        print("Warning: ENTSOE_API_KEY is not set.")
-
-    if target_date_str is None:
-        target_date_str = datetime.today().strftime('%Y-%m-%d')
-    target_date = datetime.strptime(target_date_str, '%Y-%m-%d')
+        raise Exception("ENTSOE_API_KEY is not set")
 
     entsoe = EntsoeApi(api_key, target_date_str)
     ote = OteFetcher(target_date_str)
@@ -85,30 +81,23 @@ def create_prediction_pipeline(target_date_str=None):
     df_de_load = entsoe.get_germany_load()
     df_cz_load = entsoe.get_czechia_load()
     
-    if df_cz_load is None:
-        print("Failed to fetch czechia load! Initializing basic 96-period dataframe.")
-        df = pd.DataFrame({'pos': range(1, 97)})
-    else:
-        df = df_cz_load
+    df = df_cz_load
 
     len_m = len(df)
 
-    if df_de_load is not None:
-        if 'pos' not in df_de_load.columns:
-            df_de_load['pos'] = df_de_load.index + 1
-        df = df.merge(df_de_load, on='pos', how='outer')
+    if 'pos' not in df_de_load.columns:
+        df_de_load['pos'] = df_de_load.index + 1
+    df = df.merge(df_de_load, on='pos', how='outer')
         
-    if df_de_prod is not None:
-        if 'pos' not in df_de_prod.columns:
-            df_de_prod['pos'] = df_de_prod.index + 1
-        df_de_prod = align_historical_to_target_pos(df_de_prod, len_m)
-        df = df.merge(df_de_prod, on='pos', how='outer')
+    if 'pos' not in df_de_prod.columns:
+        df_de_prod['pos'] = df_de_prod.index + 1
+    df_de_prod = align_historical_to_target_pos(df_de_prod, len_m)
+    df = df.merge(df_de_prod, on='pos', how='outer')
         
-    if df_cz_hydro is not None:
-        if 'pos' not in df_cz_hydro.columns:
-            df_cz_hydro['pos'] = df_cz_hydro.index + 1
-        df_cz_hydro = align_historical_to_target_pos(df_cz_hydro, len_m)
-        df = df.merge(df_cz_hydro, on='pos', how='outer')
+    if 'pos' not in df_cz_hydro.columns:
+        df_cz_hydro['pos'] = df_cz_hydro.index + 1
+    df_cz_hydro = align_historical_to_target_pos(df_cz_hydro, len_m)
+    df = df.merge(df_cz_hydro, on='pos', how='outer')
         
     df.rename(columns={'pos': 'period'}, inplace=True)
     df.sort_values(by='period', inplace=True)
@@ -134,78 +123,41 @@ def create_prediction_pipeline(target_date_str=None):
     df['cos_time'] = np.cos(2 * np.pi * df['period'] / periods)
 
     lw_elec = ote.get_lw_electricity_prices()
-    if lw_elec is not None:
-        df['lw_price_baseload'] = lw_elec['baseload']
-        df['lw_price_peakload'] = lw_elec['peakload']
-        df['lw_price_offpeak'] = lw_elec['offpeak']
-        
-        prices_list = lw_elec['prices']
-        if len(prices_list) == len(df):
-            df['lw_price'] = prices_list
-        else:
-            df_prices = pd.DataFrame({'pos': range(1, len(prices_list) + 1), 'lw_price': prices_list})
-            df_prices = align_historical_to_target_pos(df_prices, len(df))
-            df['lw_price'] = df_prices['lw_price'].values
+    df['lw_price_baseload'] = lw_elec['baseload']
+    df['lw_price_peakload'] = lw_elec['peakload']
+    df['lw_price_offpeak'] = lw_elec['offpeak']
+    
+    prices_list = lw_elec['prices']
+    if len(prices_list) == len(df):
+        df['lw_price'] = prices_list
     else:
-        df['lw_price_baseload'] = np.nan
-        df['lw_price_peakload'] = np.nan
-        df['lw_price_offpeak'] = np.nan
-        df['lw_price'] = np.nan
+        df_prices = pd.DataFrame({'pos': range(1, len(prices_list) + 1), 'lw_price': prices_list})
+        df_prices = align_historical_to_target_pos(df_prices, len(df))
+        df['lw_price'] = df_prices['lw_price'].values
 
     gas_prices = ote.get_gas_prices()
-    if gas_prices is not None:
-        df['gas_price'] = gas_prices['price']
-        df['lw_gas_price'] = gas_prices['lw_price']
-    else:
-        df['gas_price'] = np.nan
-        df['lw_gas_price'] = np.nan
+    df['gas_price'] = gas_prices['price']
+    df['lw_gas_price'] = gas_prices['lw_price']
 
     # EEX data
-    try:
-        price_loads = eex.get_price_loads()
-        if price_loads is not None:
-            df['price_baseload'] = price_loads.get('baseload', np.nan)
-            df['price_peakload'] = price_loads.get('peakload', np.nan)
-            df['price_offpeak'] = price_loads.get('offpeak', np.nan)
-    except Exception as e:
-        print(f"Error fetching EEX price loads: {e}")
-        df['price_baseload'] = np.nan
-        df['price_peakload'] = np.nan
-        df['price_offpeak'] = np.nan
+    price_loads = eex.get_price_loads()
+    df['price_baseload'] = price_loads.get('baseload', np.nan)
+    df['price_peakload'] = price_loads.get('peakload', np.nan)
+    df['price_offpeak'] = price_loads.get('offpeak', np.nan)
 
-    try:
-        eua_prices = eex.get_eua_prices()
-        if eua_prices is not None:
-            df['eua_price'] = eua_prices.get('price', np.nan)
-            df['lw_eua_price'] = eua_prices.get('lw_price', np.nan)
-    except Exception as e:
-        print(f"Error fetching EEX EUA prices: {e}")
-        df['eua_price'] = np.nan
-        df['lw_eua_price'] = np.nan
+    eua_prices = eex.get_eua_prices()
+    df['eua_price'] = eua_prices.get('price', np.nan)
+    df['lw_eua_price'] = eua_prices.get('lw_price', np.nan)
 
     # SpotRenewables
-    try:
-        solar_forecast = spot_solar.get_solar_forecast()
-    except Exception as e:
-        print(f"Error fetching solar forecast: {e}")
-        solar_forecast = None
-        
-    try:
-        wind_forecast = spot_wind.get_wind_forecast()
-    except Exception as e:
-        print(f"Error fetching wind forecast: {e}")
-        wind_forecast = None
+    solar_forecast = spot_solar.get_solar_forecast()
+    wind_forecast = spot_wind.get_wind_forecast()
 
-    if wind_forecast is not None:
-        df['wind_baseload'] = wind_forecast.get('baseload', np.nan)
-        df['wind_peakload'] = wind_forecast.get('peakload', np.nan)
-        df['wind_offpeak'] = wind_forecast.get('offpeak', np.nan)
-    else:
-        df['wind_baseload'] = np.nan
-        df['wind_peakload'] = np.nan
-        df['wind_offpeak'] = np.nan
+    df['wind_baseload'] = wind_forecast.get('baseload', np.nan)
+    df['wind_peakload'] = wind_forecast.get('peakload', np.nan)
+    df['wind_offpeak'] = wind_forecast.get('offpeak', np.nan)
 
-    if solar_forecast is not None and 'lw_germany_solar_gen' in df.columns and 'lw_solar_baseload' in df.columns:
+    if 'lw_germany_solar_gen' in df.columns and 'lw_solar_baseload' in df.columns:
         df['solar_projection'] = df['lw_germany_solar_gen'] * (solar_forecast.get('baseload', 0) / df['lw_solar_baseload'])
     else:
         df['solar_projection'] = np.nan
