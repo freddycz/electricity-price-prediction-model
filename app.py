@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
+
+from flask import Flask, render_template, request
+
 from modules.database import Database
 from worker import start_background_worker
 
@@ -12,7 +14,7 @@ if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or os.environ.get("FLASK_RUN_FR
 
 @app.route("/")
 def dashboard():
-    date_str = request.args.get('date', datetime.today().strftime('%Y-%m-%d'))
+    date_str = request.args.get('date', (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'))
     period_str = request.args.get('period')
     
     try:
@@ -36,8 +38,4 @@ def dashboard():
         else:
             return render_template("index.html", data=data, prev_date=prev_date, next_date=next_date, show_period=True)
 
-    '''
-    if request.headers.get('HX-Request') and not period_str:
-         return render_template("index.html", data=data, prev_date=prev_date, next_date=next_date)
-    '''
     return render_template("index.html", data=data, prev_date=prev_date, next_date=next_date, show_period=False)
