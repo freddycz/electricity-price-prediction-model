@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     standalone_scheduler.add_job(
         run_prediction_job,
-        trigger=CronTrigger(hour=11, minute=0, timezone=PRAGUE_TZ),
+        trigger=CronTrigger(hour=20, minute=1, timezone=PRAGUE_TZ),
         id='prediction_job',
         name='Denní predikce na zítřek'
     )
