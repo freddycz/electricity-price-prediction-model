@@ -55,7 +55,7 @@ def train_model():
     model = xgb.train(
         params,
         d,
-        num_boost_round=10000,
+        num_boost_round=1035,
     )
 
     model.save_model("../prediction_model.ubj")
