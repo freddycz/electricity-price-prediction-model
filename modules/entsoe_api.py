@@ -58,7 +58,6 @@ class EntsoeApi:
                     if pos_elem is not None and qty_elem is not None:
                         pos_val = int(pos_elem.text)
                         
-                        # Update our global maximum position tracker
                         if pos_val > global_max_position:
                             global_max_position = pos_val
                             

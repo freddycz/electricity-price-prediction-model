@@ -124,7 +124,6 @@ class Database:
         except Exception as e:
             print(f"Error fetching data from database: {e}")
 
-        # Calculate metrics
         avg_error = 0.0
         bias = 0.0
         max_abs_error = 0.0
