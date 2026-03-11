@@ -105,22 +105,19 @@ def create_prediction_pipeline(target_date_str):
     periods = len(df)
     if periods == 0:
         periods = 96
-    
-    # Peak load calculation
-    p_start = 32
-    p_end = 80
+
+    df['original_period'] = df['period']
     if periods == 92:
-        p_start -= 4
-        p_end -= 4
+        df.loc[df['original_period'] > 8, 'period'] += 4
     elif periods == 100:
-        p_start += 4
-        p_end += 4
+        df.loc[df['original_period'] > 12, 'period'] -= 4
 
+    # Peak load calculation
     df['is_peak'] = 0
-    df.loc[(df['period'] > p_start) & (df['period'] <= p_end), 'is_peak'] = 1
+    df.loc[(df['period'] > 32) & (df['period'] <= 80), 'is_peak'] = 1
 
-    df['sin_time'] = np.sin(2 * np.pi * df['period'] / periods)
-    df['cos_time'] = np.cos(2 * np.pi * df['period'] / periods)
+    df['sin_time'] = np.sin(2 * np.pi * df['period'] / 96)
+    df['cos_time'] = np.cos(2 * np.pi * df['period'] / 96)
 
     lw_elec = ote.get_lw_electricity_prices()
     df['lw_price_baseload'] = lw_elec['baseload']

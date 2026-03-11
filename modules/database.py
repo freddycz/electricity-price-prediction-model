@@ -48,6 +48,33 @@ class Database:
             print(f"Error saving actual prices to database: {e}")
 
 
+    def _get_time_label(self, p, num_periods=96):
+        if num_periods == 100:
+            if p <= 8:
+                h = (p - 1) // 4
+                suffix = ""
+            elif p <= 12:
+                h = 2
+                suffix = " (CEST)"
+            elif p <= 16:
+                h = 2
+                suffix = " (CET)"
+            else:
+                h = (p - 1 - 4) // 4
+                suffix = ""
+        elif num_periods == 92:
+            if p <= 8:
+                h = (p - 1) // 4
+            else:
+                h = (p - 1 + 4) // 4
+            suffix = ""
+        else:
+            h = (p - 1) // 4
+            suffix = ""
+            
+        m = ((p - 1) % 4) * 15
+        return f"{h:02d}:{m:02d}{suffix}"
+
     def get_data_for_date(self, date_str):
         chart_data = [
             [
@@ -75,10 +102,12 @@ class Database:
                     
                     db_data = {row[0]: {'pred': row[1], 'actual': row[2]} for row in rows}
                     
-                    for p in range(1, 97):
-                        h = (p - 1) // 4
-                        m = ((p - 1) % 4) * 15
-                        time_str = f"{h:02d}:{m:02d}"
+                    num_periods = len(db_data) if db_data else 96
+                    if num_periods not in (92, 96, 100):
+                        num_periods = 96
+                        
+                    for p in range(1, num_periods + 1):
+                        time_str = self._get_time_label(p, num_periods)
                         
                         period_data = db_data.get(p, {'pred': None, 'actual': None})
                         pred = period_data['pred']
@@ -131,6 +160,14 @@ class Database:
             with psycopg2.connect(self.conn_str) as conn:
                 with conn.cursor() as cursor:
                     cursor.execute('''
+                        SELECT COUNT(*)
+                        FROM price_predictions
+                        WHERE delivery_date = %s
+                    ''', (date_str,))
+                    count_row = cursor.fetchone()
+                    num_periods = count_row[0] if count_row and count_row[0] in (92, 100) else 96
+
+                    cursor.execute('''
                         SELECT predicted_price, actual_price 
                         FROM price_predictions 
                         WHERE delivery_date = %s AND period = %s
@@ -144,9 +181,7 @@ class Database:
                         pred = float(pred) if pred is not None else None
                         actual = float(actual) if actual is not None else None
                         
-                        h = (period_idx - 1) // 4
-                        m = ((period_idx - 1) % 4) * 15
-                        time_label = f"{h:02d}:{m:02d}"
+                        time_label = self._get_time_label(period_idx, num_periods)
                         
                         if pred is not None and actual is not None:
                             error = round(pred - actual, 2)
