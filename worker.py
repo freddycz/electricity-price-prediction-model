@@ -13,7 +13,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from jobs.fetch_actuals import run_actual_prices_fetch
 from jobs.predict import create_prediction_pipeline
 
-# 1. Nastavení logování (tohle u maturity ukaž, vypadá to profi)
 os.makedirs("logs", exist_ok=True) 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,15 +20,11 @@ logging.basicConfig(
     handlers=[logging.FileHandler("logs/worker.log"), logging.StreamHandler(sys.stdout)]
 )
 
-# 2. Definice časového pásma
 PRAGUE_TZ = ZoneInfo("Europe/Prague")
 
-# Pomocné funkce pro logování a správné datum
 def run_prediction_job():
     logging.info("Spouštím denní predikci...")
     try:
-        # Původní predict.py run chytá target date (v main bloku s včerejškem kvůli day-ahead/real-time)
-        # Nyní využijeme logiku, kterou preferuje predict skript - default datum
         target_date_str = (datetime.now(PRAGUE_TZ) + timedelta(days=1)).strftime('%Y-%m-%d')
         create_prediction_pipeline(target_date_str)
         logging.info("Predikce byla úspěšně dokončena.")
@@ -39,7 +34,6 @@ def run_prediction_job():
 def sync_actual_prices_job():
     logging.info("Spouštím stahování skutečných cen...")
     try:
-        # Skutečné ceny za včerejšek
         target_date_str = (datetime.now(PRAGUE_TZ) + timedelta(days=1)).strftime('%Y-%m-%d')
         run_actual_prices_fetch(target_date_str)
         logging.info("Stahování skutečných cen bylo úspěšně dokončeno.")
@@ -49,12 +43,11 @@ def sync_actual_prices_job():
 if __name__ == "__main__":
     logging.info("Worker startuje v standalone režimu... Časové pásmo: Europe/Prague")
     
-    # Pro standalone běh použijeme BlockingScheduler
     standalone_scheduler = BlockingScheduler(timezone=PRAGUE_TZ)
 
     standalone_scheduler.add_job(
         run_prediction_job,
-        trigger=CronTrigger(hour=11, minute=0, timezone=PRAGUE_TZ),
+        trigger=CronTrigger(hour=11, minute=30, timezone=PRAGUE_TZ),
         id='prediction_job',
         name='Denní predikce na zítřek'
     )
