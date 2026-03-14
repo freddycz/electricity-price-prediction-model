@@ -100,10 +100,13 @@ class OteFetcher:
             return None
 
     def get_gas_prices(self):
-        json_now = self._fetch_json(self.url_gas, self.date_str)
-        price_now = self._find_gas_price_in_json(json_now, self.date_str)
+        gas_target_date = self.target_date - timedelta(days=1)
+        gas_date_str = gas_target_date.strftime('%Y-%m-%d')
 
-        date_week_ago = self.target_date - timedelta(days=7)
+        json_now = self._fetch_json(self.url_gas, gas_date_str)
+        price_now = self._find_gas_price_in_json(json_now, gas_date_str)
+
+        date_week_ago = gas_target_date - timedelta(days=7)
         str_week_ago = date_week_ago.strftime('%Y-%m-%d')
         
         price_week_ago = None
