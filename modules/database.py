@@ -126,19 +126,16 @@ class Database:
 
         avg_error = 0.0
         bias = 0.0
-        max_abs_error = 0.0
         median_error = 0.0
         
         if errors:
             avg_error = sum(abs(e) for e in errors) / len(errors)
             bias = sum(errors) / len(errors)
-            max_abs_error = max(abs(e) for e in errors)
             median_error = statistics.median(abs(e) for e in errors)
             
         metrics = {
             "avg_error": round(avg_error, 2),
             "bias": f"+{round(bias, 2)}" if bias > 0 else str(round(bias, 2)),
-            "max_abs_error": round(max_abs_error, 2),
             "median_error": round(median_error, 2),
         }
 
