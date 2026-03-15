@@ -28,3 +28,27 @@ Systém integruje data z několika klíčových evropských platforem:
 - **Spot Renewables:** Předpovědi výroby solárních a větrných elektráren.
 
 _Tento projekt vznikl jako praktické ověření možností strojového učení v moderní energetice bez použití placených datových rozhraní._
+
+## Jak spustit (Docker)
+
+Projekt je plně kontejnerizován, což zajišťuje snadné spuštění bez nutnosti instalovat lokální dependencies.
+
+1. **Klonování repozitáře:**
+
+   ```bash
+   git clone [https://github.com/freddycz/electricity-price-prediction-model.git](https://github.com/freddycz/electricity-price-prediction-model.git)
+   cd electricity-price-prediction-model
+   ```
+
+2. **Konfigurace:**
+
+   Vytvořte soubor `.env` (inspirujte se v `.env.example`) a vložte potřebný API klíč a přístupové údaje.
+
+3. **Spuštění pomocí Docker Compose:**
+
+   ```bash
+   docker-compose up -d --build
+   ```
+
+4. **Přístup k aplikaci:**
+   Dashboard je dostupný v prohlížeči na adrese: `http://localhost:80`
