@@ -36,7 +36,7 @@ Projekt je plně kontejnerizován, což zajišťuje snadné spuštění bez nutn
 1. **Klonování repozitáře:**
 
    ```bash
-   git clone [https://github.com/freddycz/electricity-price-prediction-model.git](https://github.com/freddycz/electricity-price-prediction-model.git)
+   git clone https://github.com/freddycz/electricity-price-prediction-model.git
    cd electricity-price-prediction-model
    ```
 
