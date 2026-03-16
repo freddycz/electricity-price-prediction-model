@@ -536,7 +536,7 @@ parse_xml_response(hourly_data, response.text, "urn:iec62325.351:tc57wg16:451-6:
 \subsubsection{Zatížení české soustavy}
 Nejdůležitějším domácím fundamentem je bezesporu celková poptávka po elektrické energii. Z~platformy ENTSO-E byly pro území České republiky extrahovány dvě klíčové proměnné v~15minutovém rozlišení. První z~nich je oficiální předpověď zatížení sítě na následující den (day-ahead load forecast), kterou vydává provozovatel přenosové soustavy (ČEPS)~\cite{ceps}. Druhou proměnnou je reálné, skutečně naměřené zatížení sítě zpožděné přesně o~jeden týden ($t-7$).
 
-Tato kombinace poskytuje modelu extrémně silný prediktivní signál. Model díky předpovědi ví, jaká bude očekávaná celková spotřeba (např. vlivem ranní špičky nebo mrazivého počasí), a~zároveň díky týdennímu lagu ($t-7$) dokáže korigovat systematické odchylky a~vnímat přirozený cyklus pracovních dnů a~víkendů v~českém průmyslu.
+Tato kombinace poskytuje modelu extrémně silný prediktivní signál. Model díky předpovědi ví, jaká bude očekávaná celková spotřeba (např. vlivem ranní špičky nebo mrazivého počasí), a~zároveň díky týdennímu zpožděnému příznaku ($t-7$) dokáže korigovat systematické odchylky a~vnímat přirozený cyklus pracovních dnů a~víkendů v~českém průmyslu.
 
 \subsubsection{Ostatní zdroje výroby v~ČR (Experimentální příznaky)}
 Identicky jako pro něměcký trh (viz Podkapitola~\ref{subsubsec:ostatni-zdroje-vyroby-nemecko}) byla z~ENTSO-E stažena i~historická data o~fyzické výrobě z~jednotlivých zdrojů na území ČR (např. jaderné, uhelné a~plynové elektrárny, přečerpávací vodní zdroje). Do trénovacího datasetu byly tyto hodnoty vloženy v~podobě zpožděných příznaků z~minulého týdne ($t-7$).
@@ -742,7 +742,7 @@ Tato metrika byla vybrána pro svou vysokou byznysovou výpovědní hodnotu, neb
 
 Výsledky testování na neviděných datech (v~rámci chronologické křížové validace) potvrdily teoretické předpoklady. Referenční model lineární regrese dosáhl průměrné chyby zhruba 16~EUR/MWh. Na dynamický a~často extrémně volatilní trh s~elektřinou byla jeho statická povaha nedostatečná.
 
-Po nasazení a~hyperparametrickém ladění algoritmu XGBoost došlo k~výraznému zpřesnění predikcí. Model dokázal stlačit chybovost na úroveň 13~EUR/MWh, čímž lineární regresi s~přehledem překonal. XGBoost exceloval především v~predikcích nočních hodin (baseload). 
+Po nasazení a~hyperparametrickém ladění algoritmu XGBoost došlo k~výraznému zpřesnění predikcí. Model dokázal stlačit chybovost na úroveň 13~EUR/MWh, čímž lineární regresi s~přehledem překonal. Pro lepší představu o~reálném dopadu této odchylky je důležité uvést širší kontext: průměrná zúčtovací cena na denním trhu za celý rok 2025 činila 96,96~EUR/MWh~\cite{ote-rocni-zprava}. Dosažená chyba 13~EUR/MWh tak představuje průměrnou odchylku zhruba 13~\% vůči celoročnímu průměru. XGBoost exceloval především v~predikcích nočních hodin.
 
 \subsubsection{Problém večerní špičky}
 Při hlubší analýze odchylek bylo zjištěno, že oba modely systematicky narážejí na identický problém: predikci cen ve večerních hodinách (typicky mezi 18:00 a~20:00). Zatímco celodenní průměrná chyba algoritmu XGBoost činila 13~EUR/MWh, v~tomto specifickém časovém okně se hodnota MAE běžně vyšplhala i~přes hranici 30~EUR/MWh. V~této době totiž prudce klesá výroba solárních elektráren a~zároveň raketově roste spotřeba domácností, do kterých se lidé vracejí z~práce.
