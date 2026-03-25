@@ -47,14 +47,14 @@ if __name__ == "__main__":
 
     standalone_scheduler.add_job(
         run_prediction_job,
-        trigger=CronTrigger(hour=17, minute=13, timezone=PRAGUE_TZ),
+        trigger=CronTrigger(hour=11, minute=30, timezone=PRAGUE_TZ),
         id='prediction_job',
         name='Denní predikce na zítřek'
     )
 
     standalone_scheduler.add_job(
         sync_actual_prices_job,
-        trigger=CronTrigger(hour=17, minute=14, timezone=PRAGUE_TZ),
+        trigger=CronTrigger(hour=13, minute=15, timezone=PRAGUE_TZ),
         id='actuals_job',
         name='Stažení skutečných cen'
     )
