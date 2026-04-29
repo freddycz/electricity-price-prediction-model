@@ -896,6 +896,10 @@ Pro další diagnostiku má uživatel možnost rozkliknout si přehled jednotliv
 Tato architektura uzavírá celý životní cyklus dat. Systém zcela autonomně stahuje fundamenty, provádí výpočty v~XGBoostu, ukládá je do relační databáze a~prostřednictvím rychlého webového rozhraní je prezentuje koncovému uživateli v~intuitivní grafické podobě.
 
 \newpage
+\section{Zpětná vazba}
+Důležitým milníkem při tvorbě této práce bylo ověření funkčnosti a~smysluplnosti vytvořeného řešení experty z praxe. Velmi si proto vážím zpětné vazby, kterou mi poskytl Ing.~Jiří~Cigler,~Ph.D., technický ředitel společnosti Feramat~Energies,~s.r.o. Celé znění jeho odborného posudku je součástí této práce a~lze jej nalézt v příloze pod bodem \ref{itm:posudek}. Toto hodnocení potvrzuje, že zvolený postup – od využití moderních open-source nástrojů v Pythonu až po identifikaci klíčových tržních faktorů – odpovídá standardům běžně využívaným v komerční praxi.
+
+\newpage
 \section{Závěr}
 Hlavním cílem této práce bylo navrhnout, implementovat a~otestovat komplexní end-to-end systém pro predikci cen elektřiny na českém denním trhu. Jak bylo naznačeno v~úvodu, projekt si kladl za cíl vyzkoušet vývoj modelu na problému z~reálného světa a~ověřit možnosti i~limity strojového učení postaveného výhradně na veřejně dostupných bezplatných datech.
 
@@ -993,6 +997,7 @@ Ačkoliv algoritmus XGBoost v~této práci prokázal vynikající výsledky, jeh
 \addcontentsline{toc}{section}{Přílohy}
 \begin{enumerate}
   \item Zdrojový kód -- online přístupný na \\ \texttt{https://github.com/freddycz/electricity-price-prediction-model}
+  \item \label{itm:posudek} Odborný posudek od Ing. Jiřího Ciglera, Ph.D. (přiložen jako samostatný soubor \texttt{JiriStodulka-doporuceni.pdf}) 
 \end{enumerate}
 
 \end{document}
